@@ -1,0 +1,43 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        System.out.println("Masukkan tanggal awal menstruasi terakhir (format: yyyy-MM-dd): ");
+        String startDateInput = scanner.nextLine();
+
+        System.out.println("Masukkan durasi rata-rata siklus menstruasi dalam hari: ");
+        int cycleLength = scanner.nextInt();
+
+        System.out.println("Berapa siklus ke depan yang ingin dihitung? ");
+        int numberOfCycles = scanner.nextInt();
+
+        try {
+            LocalDate startDate = LocalDate.parse(startDateInput, dateFormatter);
+            LocalDate[] cycleDates = calculateCycles(startDate, cycleLength, numberOfCycles);
+            
+            System.out.println("Tanggal-tanggal menstruasi yang diperkirakan:");
+            for (int i = 0; i < cycleDates.length; i++) {
+                System.out.println("Siklus ke-" + (i + 1) + ": " + cycleDates[i].format(dateFormatter));
+            }
+        } catch (Exception e) {
+            System.out.println("Input tidak valid. Harap periksa format tanggal atau input lainnya.");
+        }
+
+        scanner.close();
+    }
+
+    public static LocalDate[] calculateCycles(LocalDate startDate, int cycleLength, int numberOfCycles) {
+        LocalDate[] cycleDates = new LocalDate[numberOfCycles];
+
+        for (int i = 0; i < numberOfCycles; i++) {
+            cycleDates[i] = startDate.plusDays(cycleLength * (i + 1));
+        }
+
+        return cycleDates;
+    }
+}
